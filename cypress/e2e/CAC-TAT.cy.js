@@ -20,4 +20,30 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('button[type="submit"]').click()
     cy.get('.error').should('contain', 'Valide os campos obrigatórios!').should('be.visible')
 
-})})
+})
+  it('Campo telefone deve aceitar apenas números, caso contrário, deve continuar vazio', () => {
+    cy.get('#phone')
+    .type('abcdefghij')
+    .should('have.value', '')
+  })
+  it('exibe mensagem de erro quando o telefone se torna obrigatório, mas não é preenchido antes do envio', () => {
+    cy.get('#firstName').type('Jesi').should('have.value', 'Jesi')
+    cy.get('#lastName').type('Freire').should('have.value', 'Freire')
+    cy.get('#email').type('teste@teste.com').should('have.value', 'teste@teste.com')
+    cy.get('#phone').should('be.visible')
+    cy.get('#phone-checkbox').click()
+    cy.get('button[type="submit"]').click()
+    cy.get('.error').should('contain', 'Valide os campos obrigatórios!').should('be.visible')
+
+})
+  it('preenche e limpa os campos nome, sobrenome, email e telefone', () => {
+    cy.get('#firstName').type('Jesi').should('have.value', 'Jesi').clear().should('have.value', '')
+    cy.get('#lastName').type('Freire').should('have.value', 'Freire').clear().should('have.value', '')
+    cy.get('#email').type('teste@teste.com').should('have.value', 'teste@teste.com').clear().should('have.value', '')
+   cy.get('#phone').type('123456789').should('have.value', '123456789').clear().should('have.value','')
+  })  
+  it.only('exibe mensagem de erro ao enviar o formulário sem preencher os campos obrigatórios', () => {
+   cy.get('.button').click()
+   cy.get('.error').should('contain', 'Valide os campos obrigatórios!').should('be.visible')  
+  })
+})
